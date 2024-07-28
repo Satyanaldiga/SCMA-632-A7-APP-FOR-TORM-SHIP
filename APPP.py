@@ -29,6 +29,10 @@ def add_custom_css():
 # Adding custom CSS
 add_custom_css()
 
+# Initialize session state for ship data
+if 'ship_data' not in st.session_state:
+    st.session_state.ship_data = []
+
 # Title of the app
 st.title("TORM Shipping Company - Ship Tracker")
 
@@ -36,9 +40,6 @@ st.title("TORM Shipping Company - Ship Tracker")
 with st.sidebar:
     selected = option_menu("Main Menu", ["Ship Information", "Tracking Information", "Data Visualization"],
                            icons=['ship', 'map', 'bar-chart'], menu_icon="cast", default_index=0)
-
-# Global variables to store ship data
-ship_data = []
 
 if selected == "Ship Information":
     st.header("Enter Ship Information")
@@ -55,7 +56,7 @@ if selected == "Ship Information":
         crew_members = st.number_input("Number of Crew Members", min_value=0, max_value=1000, value=0)
 
     if st.button("Submit Ship Information"):
-        ship_data.append({
+        st.session_state.ship_data.append({
             "Ship Name": ship_name,
             "IMO Number": imo_number,
             "MMSI Number": mmsi_number,
@@ -82,7 +83,7 @@ elif selected == "Tracking Information":
     ship_search = st.text_input("Enter Ship Name to Search")
     if ship_search:
         ship_found = False
-        for ship in ship_data:
+        for ship in st.session_state.ship_data:
             if ship["Ship Name"].lower() == ship_search.lower():
                 ship_found = True
                 st.subheader("Tracking Information for " + ship["Ship Name"])
@@ -98,10 +99,10 @@ elif selected == "Tracking Information":
     tracking_status = st.selectbox("Tracking Status", ["In Port", "At Sea", "Arrived"])
 
     if st.button("Submit Tracking Information"):
-        if ship_data:
-            ship_data[-1]["Start Port"] = start_port
-            ship_data[-1]["End Port"] = end_port
-            ship_data[-1]["Status"] = tracking_status
+        if st.session_state.ship_data:
+            st.session_state.ship_data[-1]["Start Port"] = start_port
+            st.session_state.ship_data[-1]["End Port"] = end_port
+            st.session_state.ship_data[-1]["Status"] = tracking_status
             st.success("Tracking information submitted!")
         else:
             st.error("Please enter ship information first.")
@@ -109,8 +110,8 @@ elif selected == "Tracking Information":
 elif selected == "Data Visualization":
     st.header("Data Visualization")
     
-    if ship_data:
-        df = pd.DataFrame(ship_data)
+    if st.session_state.ship_data:
+        df = pd.DataFrame(st.session_state.ship_data)
 
         # Bar chart for tracking status
         status_counts = df['Status'].value_counts()
@@ -127,5 +128,3 @@ elif selected == "Data Visualization":
 
     else:
         st.error("No data available for visualization.")
-
-# Optionally, you can add more functionality like database connection, real-time tracking, etc.
