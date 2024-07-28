@@ -62,7 +62,9 @@ if selected == "Ship Information":
             "Type of Cargo": cargo_type,
             "Speed of Ship": ship_speed,
             "Number of Crew Members": crew_members,
-            "Status": "Unknown"
+            "Status": "Unknown",
+            "Start Port": "",
+            "End Port": ""
         })
         st.success("Ship information submitted!")
 
@@ -77,6 +79,20 @@ if selected == "Ship Information":
 elif selected == "Tracking Information":
     st.header("Enter Tracking Information")
     
+    ship_search = st.text_input("Enter Ship Name to Search")
+    if ship_search:
+        ship_found = False
+        for ship in ship_data:
+            if ship["Ship Name"].lower() == ship_search.lower():
+                ship_found = True
+                st.subheader("Tracking Information for " + ship["Ship Name"])
+                st.write(f"**Start Port:** {ship['Start Port']}")
+                st.write(f"**End Port:** {ship['End Port']}")
+                st.write(f"**Tracking Status:** {ship['Status']}")
+                break
+        if not ship_found:
+            st.error("Ship not found. Please check the ship name.")
+
     start_port = st.text_input("Start Port")
     end_port = st.text_input("End Port")
     tracking_status = st.selectbox("Tracking Status", ["In Port", "At Sea", "Arrived"])
@@ -89,11 +105,6 @@ elif selected == "Tracking Information":
             st.success("Tracking information submitted!")
         else:
             st.error("Please enter ship information first.")
-
-    st.subheader("Tracking Information")
-    st.write(f"**Start Port:** {start_port}")
-    st.write(f"**End Port:** {end_port}")
-    st.write(f"**Tracking Status:** {tracking_status}")
 
 elif selected == "Data Visualization":
     st.header("Data Visualization")
