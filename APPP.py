@@ -6,11 +6,11 @@ def add_custom_css():
     st.markdown("""
         <style>
             .main {
-                background-color: #f5f5f5;
+                background-color: black;
                 padding: 20px;
             }
             .stButton button {
-                background-color: #007bff;
+                background-color: black;
                 color: white;
                 border: none;
                 padding: 10px 20px;
@@ -19,7 +19,7 @@ def add_custom_css():
                 cursor: pointer;
             }
             .stButton button:hover {
-                background-color: #0056b3;
+                background-color: black;
             }
         </style>
     """, unsafe_allow_html=True)
